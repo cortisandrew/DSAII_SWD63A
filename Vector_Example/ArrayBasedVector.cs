@@ -15,6 +15,19 @@ namespace Vector_Example
         private const int DEFAULT_LENGTH = 1;
 
         private int count = 0;
+        private int numberOfWriteOperations = 0;
+        private int numberOfArrayGrowths = 0;
+
+        public int NumberOfWriteOperations
+        {
+            get => numberOfWriteOperations;
+        }
+
+        public int NumberOfArrayGrowths
+        {
+            get => numberOfArrayGrowths;
+        }
+
         public int Count { 
             get => count;
             private set => count = value;
@@ -53,20 +66,26 @@ namespace Vector_Example
 
                 // same as commented code above
                 array.CopyTo(newArray, 0);
+                numberOfWriteOperations += count; // we copied count items!
+                numberOfArrayGrowths++; // we had an array growth!
 
                 // replace the old array with the new array
                 array = newArray;
             }
             
+            // when appending, this loop is never called!
             // Shift every element, starting from the last element
             // If you forgot why or how it works, please search this
             for (int i = count - 1; i >= rank; i--)
             {
                 array[i + 1] = array[i];
+                numberOfWriteOperations++;
             }
 
             // place the new element
             array[rank] = element;
+            numberOfWriteOperations++; // we wrote a new element!
+
             // increment the count
             count++;
         }
