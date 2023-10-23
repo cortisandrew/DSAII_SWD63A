@@ -1,5 +1,28 @@
 ﻿using GraphImplementations;
 
+AdjacencyListGraphImplementation adjacencyListGraphImplementation = new AdjacencyListGraphImplementation();
+
+adjacencyListGraphImplementation.AddVertex("A");
+adjacencyListGraphImplementation.AddVertex("B");
+adjacencyListGraphImplementation.AddVertex("C");
+adjacencyListGraphImplementation.AddVertex("D");
+adjacencyListGraphImplementation.AddVertex("E");
+
+adjacencyListGraphImplementation.AddEdge("A", "B");
+adjacencyListGraphImplementation.AddEdge("A", "E");
+adjacencyListGraphImplementation.AddEdge("B", "C");
+adjacencyListGraphImplementation.AddEdge("B", "D");
+adjacencyListGraphImplementation.AddEdge("B", "E");
+adjacencyListGraphImplementation.AddEdge("C", "D");
+adjacencyListGraphImplementation.AddEdge("D", "E");
+
+LinkedList<string> adjacencies = adjacencyListGraphImplementation.GetAllAdjacencies("B");
+Console.WriteLine($"The adjacencies of B are {String.Join(", ", adjacencies)}");
+
+int a = 0;
+a = a + 1;
+
+/*
 AdjacencyMatrixGraphImplementation myGraph = new AdjacencyMatrixGraphImplementation(5);
 
 myGraph.NameVertex(0, "A");
@@ -23,6 +46,4 @@ Console.WriteLine($"The degree of C is {myGraph.Degree("C")}");
 
 Console.WriteLine($"The adjacencies of B are {String.Join(", ", myGraph.GetAllAdjacencies("B"))}");
 Console.WriteLine(myGraph);
-int a = 0;
-a = a + 1;
-
+*/
