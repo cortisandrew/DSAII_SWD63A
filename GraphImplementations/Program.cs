@@ -33,6 +33,7 @@ myGraph.NameVertex(3, "D");
 myGraph.NameVertex(4, "E");
 */
 
+/*
 myGraph.AddVertex("A");
 
 myGraph.AddEdge("A", "B");

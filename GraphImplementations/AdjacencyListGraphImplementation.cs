@@ -8,42 +8,103 @@ namespace GraphImplementations
 {
     public class AdjacencyListGraphImplementation
     {
+        /*
+        // for every vertex v, I want to store a linked list which will store all the adjacencies of v
+        private LinkedList<string>[] adjacencyList = new LinkedList<string>[]
+        {
+            new LinkedList<string>() { "2", "3" }, // vertex 1
+            new LinkedList<string>() { "1" },       // vertex 2
+            new LinkedList<string>() { "1"}         // vertex 3
+        };
+        */
         // Array of linked lists
         // Each linked list would represent the adjacencies of the corresponding vertex
         // LinkedList<string>[] adjacencyList;
 
+
+        /*
+         * "1" -> { "2", "3" }
+         * "2" -> { "1" }
+         * "3" -> { "1" }
+         * 
+         */
+        private Dictionary<
+            string,                 // vertexName
+            LinkedList<string>>     // the linked list containing all the adjacencies of the vertex mapped to by the key
         // This is a hashtable
         // The key is the name of the vertex
         // The value (for each vertex) is a linked list of adjacencies
-        Dictionary<string,          // key = vertex name
-            LinkedList<string>>     // value = linked list of adjacent vertices
-                adjacencyList = new Dictionary<string, LinkedList<string>>();
+            adjacencyList = new Dictionary<string, LinkedList<string>>();
 
+        
         public void AddVertex(string vertexName)
         {
+
             if (adjacencyList.ContainsKey(vertexName))
             {
                 throw new ArgumentException("You cannot add the same vertex twice!");
             }
-
             adjacencyList.Add(vertexName, new LinkedList<string>());
         }
 
-        public void AddEdge(string vertexOne, string vertexTwo)
+        internal void AddEdge(string v1, string v2)
         {
-            if (!adjacencyList.ContainsKey(vertexOne) || !adjacencyList.ContainsKey(vertexTwo))
+            if (!adjacencyList.ContainsKey(v1))
             {
-                throw new ArgumentException("You cannot add an edge if the vertex does not exist!");
+                // v1 is not yet a vertex...
+                AddVertex(v1); // add it now...
+                // or else
+                // throw new Exception();
             }
 
-            // to add next lecture check that we don't add the same edge multiple times!
-            adjacencyList[vertexOne].AddLast(vertexTwo);
-            adjacencyList[vertexTwo].AddLast(vertexOne);
+            if (!adjacencyList.ContainsKey(v2))
+            {
+                // same as above...
+                AddVertex(v2);
+            }
+
+            // add an edge between v1 and v2
+            // this means that now v2 is adajacent to v1 and vice-versa...
+            adjacencyList[v1].AddLast(v2);
+            adjacencyList[v2].AddLast(v1);
         }
 
-        public LinkedList<string> GetAllAdjacencies(string v)
+        public override string ToString()
         {
-            return adjacencyList[v];
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("graph G {");
+
+            foreach (string getVertex in adjacencyList.Keys)
+            {
+                // we are obtaining the vertices one by one....
+                LinkedList<string> adjacentToVertex = adjacencyList[getVertex];
+
+                foreach(string getAdjacentVertex in adjacentToVertex)
+                {
+                    // we have found an edge!
+                    // the edge is from getVertex to getAdjacentVertex
+
+                    if (getAdjacentVertex.CompareTo(getVertex) < 0)
+                    {
+                        // getAdjacentVertex is in front of getVertex in the alphabetical order
+                        // do not add, we will add this edge when we are considering the adjacency with getVertex as the first vertex
+                    }
+                    else
+                    {
+                        sb.AppendLine($"{getVertex}--{getAdjacentVertex};");
+                    }
+                }
+            }
+
+            sb.AppendLine("}");
+
+            return sb.ToString();
+        }
+
+        public LinkedList<string> GetAllAdjacencies(string vertextName)
+        {
+            return adjacencyList[vertextName];
         }
     }
 }
