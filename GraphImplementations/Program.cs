@@ -25,11 +25,15 @@ a = a + 1;
 /*
 AdjacencyMatrixGraphImplementation myGraph = new AdjacencyMatrixGraphImplementation(5);
 
+/*
 myGraph.NameVertex(0, "A");
 myGraph.NameVertex(1, "B");
 myGraph.NameVertex(2, "C");
 myGraph.NameVertex(3, "D");
 myGraph.NameVertex(4, "E");
+*/
+
+myGraph.AddVertex("A");
 
 myGraph.AddEdge("A", "B");
 myGraph.AddEdge("A", "E");
@@ -45,5 +49,8 @@ Console.WriteLine($"The degree of B is {myGraph.Degree("B")}");
 Console.WriteLine($"The degree of C is {myGraph.Degree("C")}");
 
 Console.WriteLine($"The adjacencies of B are {String.Join(", ", myGraph.GetAllAdjacencies("B"))}");
+
+Console.WriteLine($"Are A and B adjacent? {myGraph.IsAdjacent("A", "B")}");
+
 Console.WriteLine(myGraph);
 */
