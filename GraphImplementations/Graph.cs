@@ -50,6 +50,43 @@ namespace GraphImplementations
             }
         }
 
+        public GraphSearchResult BFS(string s)
+        {
+            // startup of the BFS (slide 1)
+
+            // the prev here is replacing the outputGraph in the slides
+            Dictionary<string, string> prev = new Dictionary<string, string>();
+
+            // visited flags
+            HashSet<string> visited = new HashSet<string>();
+
+            Queue<string> greyVertices = new Queue<string>();
+
+            greyVertices.Enqueue(s);
+            visited.Add(s);
+
+            // slide 2 from here onwards...
+
+            // while we still have places flagged to visit
+            while (greyVertices.Count > 0)
+            {
+                string v = greyVertices.Dequeue();
+
+                // for each u is an element of adjacencies of v
+                foreach (string u in Adjacencies(v).AdjacentVertexNames)
+                {
+                    if (!visited.Contains(u))
+                    {
+                        visited.Add(u);
+                        prev.Add(u, v);
+                        greyVertices.Enqueue(u);
+                    }
+                }
+            }
+
+            return new GraphSearchResult(s, prev);
+        }
+
         public void AddEdge(string vertexName, string otherVertex)
         {
             vertices[vertexName].AddEdge(otherVertex);
