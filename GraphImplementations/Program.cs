@@ -1,5 +1,44 @@
 ﻿using GraphImplementations;
 
+Graph G = new Graph();
+
+G.AddVertex("A");
+G.AddVertex("B");
+G.AddVertex("C");
+G.AddVertex("D");
+G.AddVertex("E");
+G.AddVertex("F");
+G.AddVertex("G");
+G.AddVertex("H");
+
+G.AddEdge("A", "B");
+G.AddEdge("A", "C");
+G.AddEdge("B", "D");
+G.AddEdge("B", "F");
+G.AddEdge("C", "D");
+G.AddEdge("D", "E");
+G.AddEdge("F", "G");
+G.AddEdge("F", "H");
+G.AddEdge("G", "H");
+
+var prev = G.DFS("A");
+
+// Find a path from C back to A and print it out
+Console.WriteLine(
+    String.Join(", ", prev.PathToSource("C")));
+
+Console.WriteLine(
+    String.Join(", ", prev.PathToVertex("C")));
+
+Console.WriteLine(
+    String.Join(", ", prev.PathToSource("H")));
+
+
+int a = 0;
+a = a + 1;
+
+
+/*
 AdjacencyListGraphImplementation adjacencyListGraphImplementation = new AdjacencyListGraphImplementation();
 
 adjacencyListGraphImplementation.AddVertex("A");
@@ -21,6 +60,7 @@ Console.WriteLine($"The adjacencies of B are {String.Join(", ", adjacencies)}");
 
 int a = 0;
 a = a + 1;
+*/
 
 /*
 AdjacencyMatrixGraphImplementation myGraph = new AdjacencyMatrixGraphImplementation(5);
