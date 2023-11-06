@@ -21,7 +21,7 @@ G.AddEdge("F", "G");
 G.AddEdge("F", "H");
 G.AddEdge("G", "H");
 
-var prev = G.DFS("A");
+var prev = G.BFS("A");
 
 // Find a path from C back to A and print it out
 Console.WriteLine(

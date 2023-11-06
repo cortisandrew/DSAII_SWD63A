@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace GraphImplementations
 {
-    public class Vertex : IVertex
+    public class WeightedVertex : IWeightedVertex
     {
         public string Name { get; private set;}
 
-        public AdjacencyList AdjacencyList { get; private set; }
+        public WeightedAdjacencyList AdjacencyList { get; private set; }
 
-        public Vertex(string name)
+        public WeightedVertex(string name)
         {
             Name = name;
-            AdjacencyList = new AdjacencyList(name);
+            AdjacencyList = new WeightedAdjacencyList(name);
         }
 
-        public void AddEdge(string adjacentVertex)
+        public void AddEdge(string adjacentVertex, int weight)
         {
-            AdjacencyList.Add(adjacentVertex);
+            AdjacencyList.Add(adjacentVertex, weight);
         }
 
         // of course you can.. but you will require to change the interface IWeightedVertex... (only should be done at design stage)
         // public List<string> Adjacencies;
 
-        public AdjacencyList Adjacencies()
+        public WeightedAdjacencyList Adjacencies()
         {
             return AdjacencyList;
         }

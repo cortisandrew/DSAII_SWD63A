@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace GraphImplementations
 {
-    public interface IVertex
+    public interface IWeightedVertex
     {
         /// <summary>
         /// The Name represents a value that uniquely identifies a vertex!
         /// </summary>
         string Name { get; }
 
-        void AddEdge(string adjacentVertex);
+        void AddEdge(string adjacentVertex, int weight);
 
         // choose the other option
         //void AddEdge(IWeightedVertex otherVertex);
@@ -24,7 +24,7 @@ namespace GraphImplementations
         /// <returns>A value >= 0, representing the degree of this instance</returns>
         int Degree();
 
-        AdjacencyList Adjacencies();
+        WeightedAdjacencyList Adjacencies();
 
         bool IsAdjacent(string otherVertex);
 

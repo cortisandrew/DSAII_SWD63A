@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,10 +56,10 @@ namespace GraphImplementations
             // startup of the BFS (slide 1)
 
             // the prev here is replacing the outputGraph in the slides
-            Dictionary<string, string> prev = new Dictionary<string, string>();
+            Dictionary<string, string> prev = new Dictionary<string, string>(this.vertices.Count);
 
             // visited flags
-            HashSet<string> visited = new HashSet<string>();
+            HashSet<string> visited = new HashSet<string>(this.vertices.Count);
 
             Queue<string> greyVertices = new Queue<string>();
 
