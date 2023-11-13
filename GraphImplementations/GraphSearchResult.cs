@@ -10,11 +10,13 @@ namespace GraphImplementations
     {
         string sourceVertex;
         Dictionary<string, string> prev;
+        Dictionary<string, long>? dist;
 
-        public GraphSearchResult(string sourceVertex, Dictionary<string, string> prev)
+        public GraphSearchResult(string sourceVertex, Dictionary<string, string> prev, Dictionary<string, long>? dist = null)
         {
             this.sourceVertex = sourceVertex;
             this.prev = prev;
+            this.dist = dist;
         }
 
         public List<string> PathToSource(string otherVertex)
@@ -44,6 +46,17 @@ namespace GraphImplementations
             List<string> result = PathToSource(vertex);
             result.Reverse();
             return result;
+        }
+
+        public long DistanceFromSource(string vertex)
+        {
+            if (dist == null)
+            {
+                // we cannot work this out! We do not have the dist variable set!
+                throw new InvalidOperationException("You cannot obtain the distance since the distance is not set!");
+            }
+
+            return dist[vertex];
         }
     }
 }
