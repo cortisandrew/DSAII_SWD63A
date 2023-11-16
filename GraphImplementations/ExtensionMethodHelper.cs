@@ -8,6 +8,14 @@ namespace GraphImplementations
 {
     public static class ExtensionMethodHelper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Q"></param>
+        /// <param name="dist"></param>
+        /// <returns></returns>
+        /// <remarks>Takes Theta(|Q|) time</remarks>
         public static T RemoveMin<T>(this List<T> Q, Dictionary<T, long> dist) where T : class
         {
             // Inefficient
@@ -34,6 +42,18 @@ namespace GraphImplementations
             Q.Remove(u); // inefficient method!
 
             return u;
+        }
+
+        public static bool IsEmpty<T>(this List<T> Q)
+        {
+            return Q.Count == 0;
+        }
+
+        public static void Swap<T>(this List<T> myList, int indexOne, int indexTwo)
+        {
+            T temp = myList[indexOne];
+            myList[indexOne] = myList[indexTwo];
+            myList[indexTwo] = temp;
         }
     }
 }

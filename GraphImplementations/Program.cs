@@ -21,6 +21,8 @@ G.AddEdge("F", "G", 1);
 G.AddEdge("F", "H", 3);
 G.AddEdge("G", "H", 1);
 
+Console.WriteLine(G);
+
 var searchResult = G.Dijkstra("A");
 
 // Find a path from C back to A and print it out

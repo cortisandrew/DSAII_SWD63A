@@ -46,6 +46,8 @@ namespace GraphImplementations
             Dictionary<string, string> prev = new Dictionary<string, string>();
             Dictionary<string, long> dist = new Dictionary<string, long>();
 
+            // This loop is repeated |V| times. The operations within the loop are average or amortised O(1) times
+            // The total time is about |V|
             foreach (var vertex in vertices) {
                 Q.Add(vertex.Key); // Key is the vertex name (and identifier)
                 
@@ -58,19 +60,24 @@ namespace GraphImplementations
                 dist[vertex.Key] = long.MaxValue; // chosen approach in class
             }
 
+            // Average O(1) time
             dist[sourceVertex] = 0; // distance of the source to itself is 0
             #endregion
 
             // Main code starts here...
             #region Main Loop
-            while (Q.Count > 0)
+
+            // Outer loop is repeated |V| times
+            while (!Q.IsEmpty())
             {
                 // remove the vertex with minimum dist from Q and obtain that vertex as u
+                // This method takes about |V| time
                 string u = Q.RemoveMin(dist);
 
                 WeightedAdjacencyList adjacencies = Adjacencies(u);
 
                 // for all vertices v adjacent to u
+                // The inner loop is repeated 2|E| times (using the handshaking theorem)
                 foreach (KeyValuePair<string, int> v in adjacencies.AdjacentVertexNames)
                 {
                     long wPrime = dist[u] + v.Value; // long of alternate path
@@ -78,6 +85,13 @@ namespace GraphImplementations
                     {
                         dist[v.Key] = wPrime;
                         prev[v.Key] = u;
+
+                        // When Q is a Heap:
+                        // option i
+                        // descrease Key for v...
+
+                        // option ii
+                        // add another copy of v to the heap...
                     }
                 }
             }
@@ -89,6 +103,40 @@ namespace GraphImplementations
         public static GraphSearchResult Dijkstra(WeightedGraph g, string sourceVertex)
         {
             return g.Dijkstra(sourceVertex);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("graph G {");
+
+            foreach (string getVertex in vertices.Keys)
+            {
+                var adjacencyList = vertices[getVertex].Adjacencies();
+                // we are obtaining the vertices one by one....
+                List<string> adjacentToVertex = adjacencyList.AdjacentVertexNames.Keys.ToList<string>();
+
+                foreach (string getAdjacentVertex in adjacentToVertex)
+                {
+                    // we have found an edge!
+                    // the edge is from getVertex to getAdjacentVertex
+
+                    if (getAdjacentVertex.CompareTo(getVertex) < 0)
+                    {
+                        // getAdjacentVertex is in front of getVertex in the alphabetical order
+                        // do not add, we will add this edge when we are considering the adjacency with getVertex as the first vertex
+                    }
+                    else
+                    {
+                        sb.AppendLine($"{getVertex}--{getAdjacentVertex} [label=\"{adjacencyList.AdjacentVertexNames[getAdjacentVertex]}\"];");
+                    }
+                }
+            }
+
+            sb.AppendLine("}");
+
+            return sb.ToString();
         }
     }
 }
