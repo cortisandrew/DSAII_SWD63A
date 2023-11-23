@@ -9,7 +9,7 @@ namespace GraphImplementations
     public class VertexWeightPair
     {
         public string VertexName { get; set; } = String.Empty;
-        public int Weight { get; set; }
+        public long Weight { get; set; }
     }
 
     public class BinaryMinHeap
@@ -17,11 +17,11 @@ namespace GraphImplementations
         List<VertexWeightPair> v = new List<VertexWeightPair>();
         Dictionary<string, int> mappingFromVertexToIndex = new Dictionary<string, int>();
 
-        //int count = 0;
+        public int Count { get; private set; } = 0;
 
         public BinaryMinHeap() { }
 
-        public void Add(string vertexName, int weight) {
+        public void Add(string vertexName, long weight) {
             var vertexWeightPair = new VertexWeightPair() { VertexName= vertexName, Weight=weight };
             
             v.Add(vertexWeightPair); // Append
@@ -30,6 +30,7 @@ namespace GraphImplementations
             mappingFromVertexToIndex[vertexName] = index;
 
             UpHeap(index);
+            Count++;
         }
 
         public string RemoveMin() {
@@ -42,7 +43,7 @@ namespace GraphImplementations
             // the above maintains the complete property
             // however the heap order is now lost... because v[0] may have a large weight
             DownHeap(0); // this will fix the heap order
-
+            Count--;
             return vwp.VertexName;
         }
 
@@ -121,7 +122,7 @@ namespace GraphImplementations
             // else we are ready.. do nothing
         }
 
-        private void ReduceKey(int index, int reducedWeight)
+        private void ReduceKey(int index, long reducedWeight)
         {
             VertexWeightPair vwp = v[index];
 
@@ -134,7 +135,7 @@ namespace GraphImplementations
             UpHeap(index);
         }
 
-        public void ReduceKey(string vertexName, int reducedWeight)
+        public void ReduceKey(string vertexName, long reducedWeight)
         {
             int index = mappingFromVertexToIndex[vertexName];
 

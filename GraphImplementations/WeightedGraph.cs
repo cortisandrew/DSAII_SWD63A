@@ -99,7 +99,160 @@ namespace GraphImplementations
 
             return new GraphSearchResult(sourceVertex, prev, dist);
         }
+        /// <summary>
+        /// Total time is circa Vxlog(V)+Exlog(V)
+        /// O(|V|xlog(|V|) + |E|xlog(|V|))
+        /// </summary>
+        /// <param name="sourceVertex"></param>
+        /// <returns></returns>
+        public GraphSearchResult DijkstraHeapVersion1(string sourceVertex)
+        {
+            // Initialisation for running the algorithm is within this region
+            #region Initialisation
+            BinaryMinHeap Q = new BinaryMinHeap();    // Q is going to be a priority queue
+                                                
+            Dictionary<string, string> prev = new Dictionary<string, string>();
+            Dictionary<string, long> dist = new Dictionary<string, long>();
 
+            // This loop is repeated |V| times. The operations within the loop are worst case O(log(n)) times
+            // The total time is about O(|V|xlog(n))
+            foreach (var vertex in vertices)
+            {
+                Q.Add(vertex.Key, long.MaxValue); // Key is the vertex name (and identifier)
+
+                // prev[vertex.Key] = null; // We consider a missing key to indicate that the prev is null
+
+                // Options to store the distance to the source vertex
+                // dist[vertex.Key] = double.PositiveInfinity;
+                // dist[vertex.Key] = null;
+                // dist[vertex.Key] = long.MaxValue;
+                dist[vertex.Key] = long.MaxValue; // chosen approach in class
+            }
+
+            // Average O(log(n)) time
+            dist[sourceVertex] = 0; // distance of the source to itself is 0
+            Q.ReduceKey(sourceVertex, 0);
+            #endregion
+
+            // Main code starts here...
+            #region Main Loop
+
+            // Outer loop is repeated |V| times
+            while (Q.Count > 0)
+            {
+                // remove the vertex with minimum dist from Q and obtain that vertex as u
+                // This method takes about O(log(|V|)) time
+                string u = Q.RemoveMin();
+
+                WeightedAdjacencyList adjacencies = Adjacencies(u);
+
+                // for all vertices v adjacent to u
+                // The inner loop is repeated 2|E| times (using the handshaking theorem)
+                // Total time for this inner loop is O(|E|log(|V|))
+                foreach (KeyValuePair<string, int> v in adjacencies.AdjacentVertexNames)
+                {
+                    long wPrime = dist[u] + v.Value; // long of alternate path
+                    if (wPrime < dist[v.Key]) // a shorter path is found
+                    {
+                        dist[v.Key] = wPrime;
+                        prev[v.Key] = u;
+
+                        // When Q is a Heap:
+                        // option i
+                        // descrease Key for v...
+                        // We are using a Binary Heap (and not a more efficient Heap)
+                        Q.ReduceKey(v.Key, wPrime); // O(log(|V|))
+
+                        // option ii
+                        // add another copy of v to the heap...
+                    }
+                }
+            }
+            #endregion
+
+            return new GraphSearchResult(sourceVertex, prev, dist);
+
+        }
+
+        public GraphSearchResult DijkstraHeapVersion2(string sourceVertex)
+        {
+            // Initialisation for running the algorithm is within this region
+            #region Initialisation
+            BinaryMinHeap Q = new BinaryMinHeap();    // Q is going to be a priority queue
+
+            Dictionary<string, string> prev = new Dictionary<string, string>();
+            Dictionary<string, long> dist = new Dictionary<string, long>();
+
+            // This loop is repeated |V| times. The operations within the loop are worst case O(log(n)) times
+            // The total time is about O(|V|xlog(n))
+            foreach (var vertex in vertices)
+            {
+                // if the vertex chosen is the source vertex... simply skip the loop
+                if (vertex.Key == sourceVertex)
+                    continue;
+
+                // Not required anymore...
+                // Q.Add(vertex.Key, long.MaxValue); // Key is the vertex name (and identifier)
+
+                // prev[vertex.Key] = null; // We consider a missing key to indicate that the prev is null
+
+                // Options to store the distance to the source vertex
+                // dist[vertex.Key] = double.PositiveInfinity;
+                // dist[vertex.Key] = null;
+                // dist[vertex.Key] = long.MaxValue;
+                dist[vertex.Key] = long.MaxValue; // chosen approach in class
+            }
+
+            // Average O(log(n)) time
+            dist[sourceVertex] = 0; // distance of the source to itself is 0
+            Q.Add(sourceVertex, 0);
+            #endregion
+
+            // Main code starts here...
+            #region Main Loop
+
+            // Outer loop is repeated |V| times
+            while (Q.Count > 0)
+            {
+                // remove the vertex with minimum dist from Q and obtain that vertex as u
+                // This method takes about O(log(|V|)) time
+                string u = Q.RemoveMin();
+
+                WeightedAdjacencyList adjacencies = Adjacencies(u);
+
+                // for all vertices v adjacent to u
+                // The inner loop is repeated 2|E| times (using the handshaking theorem)
+                // Total time for this inner loop is O(|E|log(|V|))
+                foreach (KeyValuePair<string, int> v in adjacencies.AdjacentVertexNames)
+                {
+                    long wPrime = dist[u] + v.Value; // long of alternate path
+                    if (wPrime < dist[v.Key]) // a shorter path is found
+                    {
+                        dist[v.Key] = wPrime;
+                        prev[v.Key] = u;
+
+                        // When Q is a Heap:
+                        // option i
+                        // descrease Key for v...
+
+                        // option ii
+                        // add another copy of v to the heap...
+                        // log(n) time
+                        // BUT consider the situation where we are adding not |V| but e.g. 2x|V|
+                        // therefore the time to add (and similarly to removemin) is O(log(2x|V|))
+                        // What is log(2x|V|)? By logarithmic identities log(2x|V|) = log(2) + log(|V|) = 1 + log(|V|)
+                        Q.Add(v.Key, wPrime);
+
+                        // Will adding the same vertex multiple times cause problems with my algorithm?
+
+                    }
+                }
+            }
+            #endregion
+
+            return new GraphSearchResult(sourceVertex, prev, dist);
+
+        }
         public static GraphSearchResult Dijkstra(WeightedGraph g, string sourceVertex)
         {
             return g.Dijkstra(sourceVertex);
