@@ -23,6 +23,46 @@ G.AddEdge("G", "H", 1);
 
 Console.WriteLine(G);
 
+var searchResult = G.DijkstraHeapVersion1("A");
+
+// Find a path from C back to A and print it out
+Console.WriteLine(
+    String.Join(", ", searchResult.PathToSource("C")));
+
+//Console.WriteLine(
+//    String.Join(", ", searchResult.PathFromSource("C")));
+
+Console.WriteLine(
+    String.Join(", ", searchResult.PathToSource("H")));
+
+Console.WriteLine(
+    $"The distance of H to A is {searchResult.DistanceFromSource("H")}"
+    );
+
+/*
+WeightedGraph G = new WeightedGraph();
+
+G.AddVertex("A");
+G.AddVertex("B");
+G.AddVertex("C");
+G.AddVertex("D");
+G.AddVertex("E");
+G.AddVertex("F");
+G.AddVertex("G");
+G.AddVertex("H");
+
+G.AddEdge("A", "B", 4);
+G.AddEdge("A", "C", 1);
+G.AddEdge("B", "D", 3);
+G.AddEdge("B", "F", 1);
+G.AddEdge("C", "D", 2);
+G.AddEdge("D", "E", 2);
+G.AddEdge("F", "G", 1);
+G.AddEdge("F", "H", 3);
+G.AddEdge("G", "H", 1);
+
+Console.WriteLine(G);
+
 var searchResult = G.Dijkstra("A");
 
 // Find a path from C back to A and print it out
@@ -38,7 +78,7 @@ Console.WriteLine(
 Console.WriteLine(
     $"The distance of H to A is {searchResult.DistanceFromSource("H")}"
     );
-
+*/
 /*
 Graph G = new Graph();
 

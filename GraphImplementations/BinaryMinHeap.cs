@@ -35,14 +35,24 @@ namespace GraphImplementations
 
         public string RemoveMin() {
             var vwp = v[0];
+            var newMin = v[Count - 1];
 
             // swap the root with the last item
             v.Swap(0, v.Count - 1);
+            mappingFromVertexToIndex[newMin.VertexName] = 0;
+            // mappingFromVertexToIndex[vwp.VertexName] = v.Count -1;
+
+
             v.RemoveAt(v.Count - 1); // remove the element which is now at the end (therefore fast)
+            mappingFromVertexToIndex.Remove(vwp.VertexName);
 
             // the above maintains the complete property
             // however the heap order is now lost... because v[0] may have a large weight
-            DownHeap(0); // this will fix the heap order
+            if (v.Count > 0)
+            {
+                DownHeap(0); // this will fix the heap order
+                // only required if at least 1 other element is left in the array
+            }
             Count--;
             return vwp.VertexName;
         }
