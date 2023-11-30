@@ -15,12 +15,55 @@ namespace HashTableProject
         // Will be using chaining for collision resolution
         private LinkedList<Bucket<Key, Value>>[] array = new LinkedList<Bucket<Key, Value>>[DEFAULT_LENGTH];
 
+        public bool ContainsKey(Key k)
+        {
+            if (k == null)
+            {
+                throw new ArgumentNullException(nameof(k), "The key cannot be null");
+            }
+
+            int pos = (k.GetHashCode() & 0x7FFFFFFF) % array.Length;
+
+            var linkedList = array[pos];
+
+            if (linkedList == null)
+            {
+                // no linked list found - which means that there are no items in this position/index
+                return false;
+            }
+
+            foreach (var bucket in linkedList)
+            {
+                if (bucket.K == null)
+                {
+                    throw new Exception("This exception should never happen, because buckets cannot have null keys!");
+                }
+
+                // this bucket is the bucket with the correct key
+                if (bucket.K.Equals(k))
+                {
+                    return true;
+                }
+
+                // if the bucket does not contain the correct key, keep looking in the next bucket
+            }
+
+            // we have gone through the entire linked list and still haven't found the bucket
+            // the key is not here!
+            return false;
+        }
 
         public void Add(Key k, Value v)
         {
             if (k == null)
             {
                 throw new ArgumentNullException(nameof(k), "The key cannot be null");
+            }
+
+            if (ContainsKey(k))
+            {
+                // the key already exists - you cannot add the same key twice
+                throw new Exception("The key already exists! you cannot add the same key twice!");
             }
 
             Bucket<Key, Value> newBucket = new Bucket<Key, Value>(k, v);
@@ -41,12 +84,44 @@ namespace HashTableProject
 
         public void Update(Key k, Value newValue)
         {
-            throw new NotImplementedException();
+            if (k == null)
+            {
+                throw new ArgumentNullException(nameof(k), "The key cannot be null");
+            }
+
+            int pos = (k.GetHashCode() & 0x7FFFFFFF) % array.Length;
+
+            var linkedList = array[pos];
+
+            if (linkedList == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            foreach (var bucket in linkedList)
+            {
+                if (bucket.K == null)
+                {
+                    throw new Exception("This exception should never happen, because buckets cannot have null keys!");
+                }
+
+                // this bucket is the bucket with the correct key
+                if (bucket.K.Equals(k))
+                {
+                    bucket.V = newValue;
+                    return;
+                }
+            }
+
+            // we have gone through the entire linked list and still haven't found the bucket
+            // the key is not here!
+            throw new KeyNotFoundException();
         }
 
         public void Delete(Key k)
         {
-            throw new NotImplementedException();
+            // Exercise! TODO
+            throw new NotImplementedException("Exercise!");
         }
 
         public Value Get(Key k)
@@ -59,6 +134,13 @@ namespace HashTableProject
             int pos = (k.GetHashCode() & 0x7FFFFFFF) % array.Length;
 
             var linkedList = array[pos];
+
+            if (linkedList == null)
+            {
+                // the location does not have any keys at all - therefore the key you want to get does not exist
+                // throw an Exception
+                throw new KeyNotFoundException();
+            }
 
             foreach (var bucket in linkedList)
             {
