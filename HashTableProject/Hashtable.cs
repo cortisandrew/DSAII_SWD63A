@@ -15,6 +15,12 @@ namespace HashTableProject
         // Will be using chaining for collision resolution
         private LinkedList<Bucket<Key, Value>>[] array = new LinkedList<Bucket<Key, Value>>[DEFAULT_LENGTH];
 
+        public double LoadFactor { get {
+                return (double)Count / array.Length; 
+            } }
+
+        private const double MAX_LOAD_FACTOR = 0.9; // the max load factor directly indicates how much extra space we need (as a minimum)
+
         public bool ContainsKey(Key k)
         {
             if (k == null)
@@ -66,6 +72,48 @@ namespace HashTableProject
                 throw new Exception("The key already exists! you cannot add the same key twice!");
             }
 
+            // array growth to stop load factor from becoming too large
+            if (LoadFactor >= MAX_LOAD_FACTOR)
+            {
+                // we have an issue! Load factor is very high!
+                // we can create a new and larger array that contains all of the items
+                LinkedList<Bucket<Key, Value>>[] newArray = new LinkedList<Bucket<Key, Value>>[array.Length * 2];
+
+                // copy all of the old data over to the newArray
+                foreach (var linkedList in array)
+                {
+                    if (linkedList == null)
+                    {
+                        // linked list is empty
+                        continue;
+                    }
+
+                    foreach (var bucket in linkedList)
+                    {
+                        // an item that I would like to copy over to the new array
+                        // the new bucket should contain the key and value from the old bucket
+                        Bucket<Key, Value> copyBucket = new Bucket<Key, Value>(bucket.K, bucket.V);
+                        int newPos = (bucket.K.GetHashCode() & 0x7FFFFFFF) % newArray.Length;
+
+                        if (newArray[newPos] == null)
+                        {
+                            newArray[newPos] = new LinkedList<Bucket<Key, Value>>();
+                            newArray[newPos].AddLast(copyBucket);
+                        }
+                        else
+                        {
+                            // collision: a item already exists here,
+                            // add to the end of the linked list
+                            newArray[newPos].AddLast(copyBucket);
+                        }
+                    }
+                }
+
+                // now all the items in the old array have been copied to the new array
+                // replace the old array with the new array containing all of the items
+                array = newArray;
+            }
+
             Bucket<Key, Value> newBucket = new Bucket<Key, Value>(k, v);
             int pos = (k.GetHashCode() & 0x7FFFFFFF) % array.Length;
 
@@ -80,6 +128,8 @@ namespace HashTableProject
                 // add to the end of the linked list
                 array[pos].AddLast(newBucket);
             }
+
+            Count++;
         }
 
         public void Update(Key k, Value newValue)
